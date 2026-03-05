@@ -15,7 +15,7 @@ jobs:
       VERSION: "1.1"
       BASE_COMMIT: "a5e6a101869e027e7930e694f8b1cfb082603453"
       ENV_SETUP_COMMIT: "ec9e3c0436fbff934fa84e22bf07f1b3ef5bfac3"
-      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning'' bin/test -C --verbose'
+      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning,ignore::DeprecationWarning'' bin/test -C --verbose'
       TEST_FILES: 'sympy/core/tests/test_match.py sympy/polys/tests/test_polytools.py'
       CONDA_ENV: "testbed"
     steps:
