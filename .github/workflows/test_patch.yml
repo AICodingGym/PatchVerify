@@ -394,7 +394,6 @@ jobs:
             "Check the never-cache status of the password change done view",
             "Object history button link should work and contain the pk value quoted.",
             "Link to the changeform of the object in changelist should use reverse()",
-            "\"",
             "Retrieving the object using urlencoded form of primary key should work",
             "Retrieving the history for an object using urlencoded form of primary",
             "The link from the recent actions list referring to the changeform of",
