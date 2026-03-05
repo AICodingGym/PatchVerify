@@ -205,7 +205,6 @@ jobs:
             "test_force_grouping (template_tests.filter_tests.test_floatformat.FunctionTests.test_force_grouping)",
             "test_infinity (template_tests.filter_tests.test_floatformat.FunctionTests.test_infinity)",
             "test_inputs (template_tests.filter_tests.test_floatformat.FunctionTests.test_inputs)",
-            "#15789",
             "test_negative_zero_values (template_tests.filter_tests.test_floatformat.FunctionTests.test_negative_zero_values)",
             "test_unlocalize (template_tests.filter_tests.test_floatformat.FunctionTests.test_unlocalize)"
           ]
