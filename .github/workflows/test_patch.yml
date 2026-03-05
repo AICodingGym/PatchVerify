@@ -15,7 +15,7 @@ jobs:
       VERSION: "1.1"
       BASE_COMMIT: "1659712001810f5fc563a443949f8e3bb38af4bd"
       ENV_SETUP_COMMIT: "ec9e3c0436fbff934fa84e22bf07f1b3ef5bfac3"
-      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning'' bin/test -C --verbose'
+      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning,ignore::DeprecationWarning'' bin/test -C --verbose'
       TEST_FILES: 'sympy/matrices/tests/test_matrices.py'
       CONDA_ENV: "testbed"
     steps:
