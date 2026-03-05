@@ -1,0 +1,123 @@
+name: SWE-bench Pro Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 240
+    env:
+      INSTANCE_ID: "instance_internetarchive__openlibrary-c4eebe6677acc4629cb541a98d5e91311444f5d4-v13642507b4fc1f8d234172bf8129942da2c2ca26"
+      REPO: "internetarchive/openlibrary"
+      BASE_COMMIT: "84cc4ed5697b83a849e9106a09bfed501169cc20"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t swebench-test -f .swebench/Dockerfile .
+
+      - name: Prepare workspace
+        run: |
+          git fetch origin $BASE_COMMIT --depth=1
+          mkdir -p /tmp/swebench-workspace
+          git diff $BASE_COMMIT HEAD > /tmp/swebench-workspace/patch.diff || true
+          echo "Patch size: $(wc -c < /tmp/swebench-workspace/patch.diff) bytes"
+          cp .swebench/run_script.sh /tmp/swebench-workspace/run_script.sh
+          cp .swebench/parser.py /tmp/swebench-workspace/parser.py
+          cp .swebench/entrypoint.sh /tmp/swebench-workspace/entrypoint.sh
+          chmod +x /tmp/swebench-workspace/run_script.sh
+          chmod +x /tmp/swebench-workspace/entrypoint.sh
+
+      - name: Run tests in Docker
+        id: run_tests
+        run: |
+          set +e
+          docker run --rm \
+            --entrypoint /bin/bash \
+            -e BASE_COMMIT=$BASE_COMMIT \
+            -v /tmp/swebench-workspace:/workspace \
+            swebench-test \
+            /workspace/entrypoint.sh
+          TEST_EXIT=$?
+          echo "TEST_EXIT=$TEST_EXIT" >> "$GITHUB_ENV"
+          echo "test_exit=$TEST_EXIT" >> "$GITHUB_OUTPUT"
+
+          echo ''
+          echo "===== TEST RESULTS ====="
+          if [ -f /tmp/swebench-workspace/output.json ]; then
+            cat /tmp/swebench-workspace/output.json
+          else
+            echo "No parsed output found."
+          fi
+          echo "========================"
+          exit $TEST_EXIT
+
+      - name: Send webhook notification
+        if: always()
+        env:
+          WEBHOOK_URL: "https://aicodinggym.com/api/webhooks/github"
+        run: |
+          python3 << 'WEBHOOK_EOF'
+          import json, os, sys, urllib.request
+
+          url = os.environ.get("WEBHOOK_URL", "")
+          commit_id = os.environ.get("GITHUB_SHA", "")
+          branch_name = os.environ.get("GITHUB_REF_NAME", "")
+          test_exit = int(os.environ.get("TEST_EXIT", "1"))
+          status = "COMPLETED" if test_exit == 0 else "FAILED"
+          passed = test_exit == 0
+
+          details = ''
+          try:
+              with open('/tmp/swebench-workspace/stdout.log') as f:
+                  details = f.read()
+          except Exception:
+              pass
+
+          passed_tests = 0
+          failed_tests = 0
+          total_tests = 0
+          try:
+              with open('/tmp/swebench-workspace/output.json') as f:
+                  data = json.load(f)
+              tests = data.get('tests', [])
+              total_tests = len(tests)
+              passed_tests = sum(1 for t in tests if t.get('status') == 'PASSED')
+              failed_tests = sum(1 for t in tests if t.get('status') == 'FAILED')
+          except Exception:
+              total_tests = 1
+              passed_tests = 1 if passed else 0
+              failed_tests = 0 if passed else 1
+
+          if not url or not commit_id or not branch_name:
+              print("Webhook: missing url/commit/branch; skipping.")
+              sys.exit(0)
+
+          payload = {
+              "commit_id": commit_id,
+              "branch_name": branch_name,
+              "status": status,
+              "passed": passed,
+              "passed_tests": passed_tests,
+              "total_tests": total_tests,
+              "failed_tests": failed_tests,
+              "details": details[:50000] if details else "",
+          }
+          data_bytes = json.dumps(payload).encode("utf-8")
+          req = urllib.request.Request(
+              url, data=data_bytes,
+              headers={"Content-Type": "application/json"},
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=10) as resp:
+                  body = resp.read().decode("utf-8")
+                  print("Webhook response:", body)
+          except Exception as exc:
+              print("Webhook failed:", exc)
+          WEBHOOK_EOF
