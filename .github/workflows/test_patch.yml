@@ -15,7 +15,7 @@ jobs:
       VERSION: "1.0"
       BASE_COMMIT: "d7c3045115693e887bcd03599b7ca4650ac5f2cb"
       ENV_SETUP_COMMIT: "50b81f9f6be151014501ffac44e5dc6b2416938f"
-      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning'' bin/test -C --verbose'
+      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning,ignore::DeprecationWarning'' bin/test -C --verbose'
       TEST_FILES: 'sympy/utilities/tests/test_lambdify.py'
       CONDA_ENV: "testbed"
     steps:
