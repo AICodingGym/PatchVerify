@@ -208,7 +208,6 @@ jobs:
             "test_float_dunder_method (template_tests.filter_tests.test_floatformat.FunctionTests)",
             "test_force_grouping (template_tests.filter_tests.test_floatformat.FunctionTests)",
             "test_infinity (template_tests.filter_tests.test_floatformat.FunctionTests)",
-            "#15789",
             "test_negative_zero_values (template_tests.filter_tests.test_floatformat.FunctionTests)",
             "test_unlocalize (template_tests.filter_tests.test_floatformat.FunctionTests)",
             "test_zero_values (template_tests.filter_tests.test_floatformat.FunctionTests)"
