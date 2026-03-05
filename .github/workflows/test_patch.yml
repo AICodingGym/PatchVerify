@@ -383,7 +383,6 @@ jobs:
             "startproject validates that project name doesn't clash with existing",
             "Make sure the startproject management command validates a project name",
             "Make sure template context variables are not html escaped",
-            "\"",
             "Make sure the startproject management command creates a project",
             "The startproject management command creates a project in a specific",
             "Ticket 17475: Template dir passed has a trailing path separator",
