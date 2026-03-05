@@ -15,7 +15,7 @@ jobs:
       VERSION: "1.1"
       BASE_COMMIT: "d1320814eda6549996190618a21eaf212cfd4d1e"
       ENV_SETUP_COMMIT: "ec9e3c0436fbff934fa84e22bf07f1b3ef5bfac3"
-      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning'' bin/test -C --verbose'
+      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning,ignore::DeprecationWarning'' bin/test -C --verbose'
       TEST_FILES: 'sympy/core/tests/test_basic.py sympy/core/tests/test_numbers.py'
       CONDA_ENV: "testbed"
     steps:
