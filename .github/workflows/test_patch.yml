@@ -15,7 +15,7 @@ jobs:
       VERSION: "1.0"
       BASE_COMMIT: "360290c4c401e386db60723ddb0109ed499c9f6e"
       ENV_SETUP_COMMIT: "50b81f9f6be151014501ffac44e5dc6b2416938f"
-      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning'' bin/test -C --verbose'
+      TEST_CMD: 'PYTHONWARNINGS=''ignore::UserWarning,ignore::SyntaxWarning,ignore::DeprecationWarning'' bin/test -C --verbose'
       TEST_FILES: 'sympy/geometry/tests/test_point.py'
       CONDA_ENV: "testbed"
     steps:
