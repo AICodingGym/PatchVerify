@@ -1,7 +1,8 @@
+# syntax=docker/dockerfile:1
 ###############################################
 # BASE IMAGE
 ###############################################
-FROM 084828598639.dkr.ecr.us-west-2.amazonaws.com/docker-hub/library/python:3.11.1-slim
+FROM python:3.11.1-slim
 
 ###############################################
 # WORKING DIRECTORY
