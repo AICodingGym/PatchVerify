@@ -32,15 +32,19 @@ cat /workspace/stderr.log 2>/dev/null || true
 echo '=== PARSED OUTPUT ==='
 cat /workspace/output.json 2>/dev/null || true
 
-# Exit non-zero if any test failed
+# Exit non-zero if any test failed or errored
 python -c "
 import json, sys
 try:
     with open('/workspace/output.json') as f:
         data = json.load(f)
-    failed = [t for t in data.get('tests', []) if t.get('status') == 'FAILED']
+    tests = data.get('tests', [])
+    failed = [t for t in tests if t.get('status') in ('FAILED', 'ERROR')]
     if failed:
-        print(f'{len(failed)} test(s) FAILED')
+        print(f'{len(failed)} test(s) FAILED/ERROR')
+        sys.exit(1)
+    if not tests:
+        print('No tests found')
         sys.exit(1)
     print('All tests passed')
 except Exception as e:
