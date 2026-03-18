@@ -34,7 +34,7 @@ run_selected_tests() {
   echo "Running selected tests: ${test_files[@]}"
   export PYTHONPATH="/app/lib:/app/test/lib:$PYTHONPATH"
   cd /app
-  python -m pytest "${test_files[@]}" -v || true
+  python -m pytest "${test_files[@]}" -v
 }
 
 
