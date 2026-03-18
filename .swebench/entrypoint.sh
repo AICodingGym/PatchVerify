@@ -13,8 +13,11 @@ git checkout 2cd2d1a9a21e29c51f63c5dab938b9efc09bb862
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 436341a4a522dc83eb8bddd1164b764c8dd6bc45 -- config/os_test.go scanner/windows_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 436341a4a522dc83eb8bddd1164b764c8dd6bc45 -- config/os_test.go scanner/windows_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestEOL_IsStandardSupportEnded/Fedora_38_supported,TestEOL_IsStandardSupportEnded/Fedora_37_eol_since_2023-12-6,TestEOL_IsStandardSupportEnded,Test_windows_detectKBsFromKernelVersion/10.0.19045.2130,Test_windows_detectKBsFromKernelVersion/10.0.20348.9999,Test_windows_detectKBsFromKernelVersion/10.0.19045.2129,Test_windows_detectKBsFromKernelVersion,Test_windows_detectKBsFromKernelVersion/10.0.20348.1547,TestEOL_IsStandardSupportEnded/Fedora_40_supported,Test_windows_detectKBsFromKernelVersion/10.0.22621.1105 > /workspace/stdout.log 2> /workspace/stderr.log
