@@ -13,8 +13,11 @@ git checkout d7a6e3ec65cf28d2454ccb357874828bc8147eb0
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 1216285ed2e82e62f8780b6702aa0f9abdda0b34 -- test/components/views/elements/ExternalLink-test.tsx test/components/views/elements/__snapshots__/ExternalLink-test.tsx.snap
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 1216285ed2e82e62f8780b6702aa0f9abdda0b34 -- test/components/views/elements/ExternalLink-test.tsx test/components/views/elements/__snapshots__/ExternalLink-test.tsx.snap
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/components/views/elements/__snapshots__/ExternalLink-test.tsx.snap,test/components/views/elements/ExternalLink-test.tsx,test/components/views/elements/ExternalLink-test.ts > /workspace/stdout.log 2> /workspace/stderr.log
