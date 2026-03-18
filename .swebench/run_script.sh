@@ -10,13 +10,13 @@ run_all_tests() {
   cd /app
   
   echo "=== Running Sanity Tests ==="
-  /app/bin/ansible-test sanity --python 3.9 --skip-test pylint --skip-test pslint --skip-test validate-modules --skip-test yamllint || true
+  /app/bin/ansible-test sanity --python 3.9 --skip-test pylint --skip-test pslint --skip-test validate-modules --skip-test yamllint
   
   echo "=== Running Unit Tests ==="
-  /app/bin/ansible-test units --python 3.9 --verbose || true
+  /app/bin/ansible-test units --python 3.9 --verbose
   
   echo "=== Running a Sample Integration Test ==="
-  /app/bin/ansible-test integration -v ping || true
+  /app/bin/ansible-test integration -v ping
   
   echo "All tests completed"
   return 0
@@ -34,13 +34,13 @@ run_selected_tests() {
   for test_file in "${test_files[@]}"; do
     if [[ $test_file == *"units"* ]]; then
       echo "Running unit test: $test_file"
-      /app/bin/ansible-test units --python 3.9 "$test_file" --verbose || true
+      /app/bin/ansible-test units --python 3.9 "$test_file" --verbose
     elif [[ $test_file == *"integration"* ]]; then
       echo "Running integration test: $test_file"
-      /app/bin/ansible-test integration --python 3.9 "$test_file" --verbose || true
+      /app/bin/ansible-test integration --python 3.9 "$test_file" --verbose
     else
       echo "Running test with pytest: $test_file"
-      python -m pytest "$test_file" -v || true
+      python -m pytest "$test_file" -v
     fi
   done
   
