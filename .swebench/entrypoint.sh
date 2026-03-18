@@ -14,8 +14,11 @@ git checkout bf70473d724be9664974c0bc6b04458f6123ead2
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 5e815cfa518b223a088fa9bb232a5fc90ab15691 -- packages/components/containers/payments/RenewToggle.test.tsx packages/components/hooks/helpers/test/useSubscription.ts
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 5e815cfa518b223a088fa9bb232a5fc90ab15691 -- packages/components/containers/payments/RenewToggle.test.tsx packages/components/hooks/helpers/test/useSubscription.ts
+fi
 
 # Run tests
 bash /workspace/run_script.sh packages/components/hooks/helpers/test/useSubscription.ts,containers/payments/RenewToggle.test.ts,packages/components/containers/payments/RenewToggle.test.tsx > /workspace/stdout.log 2> /workspace/stderr.log
