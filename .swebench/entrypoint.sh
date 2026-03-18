@@ -13,8 +13,11 @@ git checkout f34c1609c3c42f095b59bc068620f342894f94ed
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout ecfd1736e5dd9808e87911fc264e6c816653e1a9 -- test/components/structures/RoomSearchView-test.tsx test/components/views/rooms/SearchResultTile-test.tsx
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout ecfd1736e5dd9808e87911fc264e6c816653e1a9 -- test/components/structures/RoomSearchView-test.tsx test/components/views/rooms/SearchResultTile-test.tsx
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/components/views/rooms/SearchResultTile-test.ts,test/utils/sets-test.ts,test/components/structures/RoomSearchView-test.tsx,test/components/structures/RoomSearchView-test.ts,test/utils/direct-messages-test.ts,test/components/views/settings/devices/DeviceExpandDetailsButton-test.ts,test/components/views/context_menus/ThreadListContextMenu-test.ts,test/components/views/rooms/SearchResultTile-test.tsx > /workspace/stdout.log 2> /workspace/stderr.log
