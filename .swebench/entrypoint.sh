@@ -13,8 +13,11 @@ git checkout b58ad484649e51b439ba11df387e25e23e8296d1
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout fb0ab2b9b771377a689fd0d0374777c251e58bbf -- lib/utils/circular_buffer_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout fb0ab2b9b771377a689fd0d0374777c251e58bbf -- lib/utils/circular_buffer_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestChConn,TestReadAtMost,TestNewCircularBuffer,TestEscapeControl,TestSlice,TestCircularBuffer_Data,TestUtils,TestFilterAWSRoles,TestConsolefLongComponent,TestAllowNewlines > /workspace/stdout.log 2> /workspace/stderr.log
