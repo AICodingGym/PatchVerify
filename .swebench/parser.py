@@ -95,6 +95,11 @@ def parse_test_output(stdout_content: str, stderr_content: str) -> List[TestResu
             if not any(r.name == test_name for r in results):
                 results.append(TestResult(name=test_name, status=TestStatus.ERROR))
     
+    # Detect [build failed] (compilation errors before any tests run)
+    if not results:
+        combined = stdout_content + '\n' + stderr_content
+        if re.search(r'\[build failed\]', combined, re.IGNORECASE):
+            results.append(TestResult(name='build_failed', status=TestStatus.FAILED))
     return results
 
 
