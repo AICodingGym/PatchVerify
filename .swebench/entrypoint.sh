@@ -14,8 +14,11 @@ git checkout 94dc494bae131e6577f795cb5fa3ca66a09757e3
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout d494a66038112b239a381f49b3914caf8d2ef3b4 -- packages/components/containers/calendar/subscribeCalendarModal/SubscribeCalendarModal.test.tsx
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout d494a66038112b239a381f49b3914caf8d2ef3b4 -- packages/components/containers/calendar/subscribeCalendarModal/SubscribeCalendarModal.test.tsx
+fi
 
 # Run tests
 bash /workspace/run_script.sh containers/calendar/subscribeCalendarModal/SubscribeCalendarModal.test.ts,packages/components/containers/calendar/subscribeCalendarModal/SubscribeCalendarModal.test.tsx > /workspace/stdout.log 2> /workspace/stderr.log
