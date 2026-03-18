@@ -13,8 +13,11 @@ git checkout 07e7b69c04116f598ed2376616cbb46343d9a0e9
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout eea46a0d1b99a6dadedbb6a3502d599235fa7ec3 -- test/units/modules/network/eric_eccli/__init__.py test/units/modules/network/eric_eccli/eccli_module.py test/units/modules/network/eric_eccli/fixtures/configure_terminal test/units/modules/network/eric_eccli/fixtures/show_version test/units/modules/network/eric_eccli/test_eccli_command.py
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout eea46a0d1b99a6dadedbb6a3502d599235fa7ec3 -- test/units/modules/network/eric_eccli/__init__.py test/units/modules/network/eric_eccli/eccli_module.py test/units/modules/network/eric_eccli/fixtures/configure_terminal test/units/modules/network/eric_eccli/fixtures/show_version test/units/modules/network/eric_eccli/test_eccli_command.py
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/units/modules/network/eric_eccli/test_eccli_command.py,test/units/modules/network/eric_eccli/__init__.py,test/units/modules/network/eric_eccli/eccli_module.py > /workspace/stdout.log 2> /workspace/stderr.log
