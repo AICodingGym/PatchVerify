@@ -13,8 +13,11 @@ git checkout d5d1ec775caf2d3c9132122c1243898e99fdb2da
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 41dfec20bfe9b62cddbbbf621bef2e9aa9685157 -- test/utils/AutoDiscoveryUtils-test.tsx
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 41dfec20bfe9b62cddbbbf621bef2e9aa9685157 -- test/utils/AutoDiscoveryUtils-test.tsx
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/components/views/rooms/wysiwyg_composer/EditWysiwygComposer-test.ts,test/utils/AutoDiscoveryUtils-test.ts,test/components/views/beacon/BeaconMarker-test.ts,test/components/views/rooms/wysiwyg_composer/SendWysiwygComposer-test.ts,test/utils/LruCache-test.ts,test/utils/beacon/bounds-test.ts,test/components/views/dialogs/ChangelogDialog-test.ts,test/utils/AutoDiscoveryUtils-test.tsx,test/components/views/messages/MBeaconBody-test.ts,test/components/views/rooms/VoiceRecordComposerTile-test.ts,test/components/views/rooms/BasicMessageComposer-test.ts > /workspace/stdout.log 2> /workspace/stderr.log
