@@ -26,7 +26,7 @@ run_selected_tests() {
     file_path=$(echo "$test_file" | cut -d':' -f1)
     if [[ -f "$file_path" ]]; then
       echo "Running test file: $file_path"
-      pytest -v --tb=short "$file_path" || true
+      pytest -v --tb=short "$file_path"
     else
       echo "Test file not found: $file_path"
     fi
