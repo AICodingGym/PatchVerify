@@ -13,8 +13,11 @@ git checkout 1f59bbf4f39504c8f2087f8132f2475a6ac38dcb
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout a6e671db25381ed111bbad0ab3e7d97366395d05 -- test/units/module_utils/facts/hardware/aix_data.py test/units/module_utils/facts/hardware/test_aix_processor.py
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout a6e671db25381ed111bbad0ab3e7d97366395d05 -- test/units/module_utils/facts/hardware/aix_data.py test/units/module_utils/facts/hardware/test_aix_processor.py
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/units/module_utils/facts/hardware/test_aix_processor.py,test/units/module_utils/facts/hardware/aix_data.py > /workspace/stdout.log 2> /workspace/stderr.log
