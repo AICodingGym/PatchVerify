@@ -13,8 +13,11 @@ git checkout ad00c6c789bdac9b04403889d7ed426242205d64
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 82185f232ae8974258397e121b3bc2ed0c3729ed -- tool/tsh/tsh_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 82185f232ae8974258397e121b3bc2ed0c3729ed -- tool/tsh/tsh_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestFormatConnectCommand/default_user_is_specified,TestReadClusterFlag/TELEPORT_CLUSTER_set,TestOptions/Invalid_key,TestFailedLogin,TestReadClusterFlag/TELEPORT_SITE_and_TELEPORT_CLUSTER_set,_prefer_TELEPORT_CLUSTER,TestKubeConfigUpdate/invalid_selected_cluster,TestOptions/Incomplete_option,TestKubeConfigUpdate/selected_cluster,TestKubeConfigUpdate,TestKubeConfigUpdate/no_tsh_path,TestIdentityRead,TestOptions/Forward_Agent_Yes,TestOptions/Forward_Agent_InvalidValue,TestMakeClient,TestOptions/Equals_Sign_Delimited,TestReadClusterFlag/nothing_set,TestReadClusterFlag/TELEPORT_SITE_and_TELEPORT_CLUSTER_and_CLI_flag_is_set,_prefer_CLI,TestKubeConfigUpdate/no_kube_clusters,TestRelogin,TestOptions,TestKubeConfigUpdate/no_selected_cluster,TestFormatConnectCommand/default_user/database_are_specified,TestFormatConnectCommand/default_database_is_specified,TestFetchDatabaseCreds,TestOptions/Forward_Agent_Local,TestFormatConnectCommand/no_default_user/database_are_specified,TestOptions/AddKeysToAgent_Invalid_Value,TestOptions/Forward_Agent_No,TestOIDCLogin,TestReadClusterFlag,TestFormatConnectCommand/unsupported_database_protocol,TestOptions/Space_Delimited,TestReadClusterFlag/TELEPORT_SITE_set,TestFormatConnectCommand > /workspace/stdout.log 2> /workspace/stderr.log
