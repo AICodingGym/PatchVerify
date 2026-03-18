@@ -13,8 +13,11 @@ git checkout b03433ef8b83a4c82b9d879946fb1ab5afaca522
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 9a31cd0fa849da810b4fac6c6c015145e850b282 -- test/components/views/settings/JoinRuleSettings-test.tsx
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 9a31cd0fa849da810b4fac6c6c015145e850b282 -- test/components/views/settings/JoinRuleSettings-test.tsx
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/components/views/messages/MessageActionBar-test.ts,test/components/views/settings/EventIndexPanel-test.ts,test/voice-broadcast/stores/VoiceBroadcastPreRecordingStore-test.ts,test/components/views/elements/LabelledCheckbox-test.ts,test/components/views/settings/tabs/user/SessionManagerTab-test.ts,test/components/structures/AutocompleteInput-test.ts,test/components/views/settings/JoinRuleSettings-test.tsx,test/components/views/settings/JoinRuleSettings-test.ts,test/stores/SetupEncryptionStore-test.ts,test/components/views/context_menus/SpaceContextMenu-test.ts > /workspace/stdout.log 2> /workspace/stderr.log
