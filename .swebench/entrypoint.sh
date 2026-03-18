@@ -13,8 +13,11 @@ git checkout 04bc8fb71c4a1ee1eb1f0c4a1de1641d353e9f2c
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 66d0b318bc6fee0d17b54c1781d6ab5d5d323135 -- test/voice-broadcast/components/molecules/VoiceBroadcastPlaybackBody-test.tsx test/voice-broadcast/components/molecules/__snapshots__/VoiceBroadcastPlaybackBody-test.tsx.snap test/voice-broadcast/models/VoiceBroadcastPlayback-test.ts test/voice-broadcast/utils/VoiceBroadcastChunkEvents-test.ts
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 66d0b318bc6fee0d17b54c1781d6ab5d5d323135 -- test/voice-broadcast/components/molecules/VoiceBroadcastPlaybackBody-test.tsx test/voice-broadcast/components/molecules/__snapshots__/VoiceBroadcastPlaybackBody-test.tsx.snap test/voice-broadcast/models/VoiceBroadcastPlayback-test.ts test/voice-broadcast/utils/VoiceBroadcastChunkEvents-test.ts
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/voice-broadcast/models/VoiceBroadcastPlayback-test.ts,test/components/views/elements/Linkify-test.ts,test/components/views/voip/CallView-test.ts,test/voice-broadcast/utils/hasRoomLiveVoiceBroadcast-test.ts,test/voice-broadcast/components/molecules/__snapshots__/VoiceBroadcastPlaybackBody-test.tsx.snap,test/voice-broadcast/components/molecules/VoiceBroadcastPlaybackBody-test.tsx,test/stores/widgets/StopGapWidget-test.ts,test/components/views/settings/devices/DeviceExpandDetailsButton-test.ts,test/voice-broadcast/components/molecules/VoiceBroadcastPlaybackBody-test.ts,test/components/views/settings/UiFeatureSettingWrapper-test.ts,test/components/views/right_panel/PinnedMessagesCard-test.ts,test/voice-broadcast/utils/VoiceBroadcastChunkEvents-test.ts > /workspace/stdout.log 2> /workspace/stderr.log
