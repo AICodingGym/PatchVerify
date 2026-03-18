@@ -10,7 +10,7 @@ run_all_tests() {
   
   echo "Running pytest directly on unit tests..."
   echo "Python path: $PYTHONPATH"
-  python -m pytest test/units/ -v --tb=short --no-header --ignore=test/units/_vendor/ || true
+  python -m pytest test/units/ -v --tb=short --no-header --ignore=test/units/_vendor/
 }
 
 run_selected_tests() {
@@ -33,7 +33,7 @@ run_selected_tests() {
     fi
     
     echo "Running test: $test_file"
-    python -m pytest "$test_file" -v --tb=short --no-header --ignore=test/units/_vendor/ || true
+    python -m pytest "$test_file" -v --tb=short --no-header --ignore=test/units/_vendor/
   done
 }
 
