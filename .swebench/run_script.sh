@@ -12,7 +12,7 @@ run_all_tests() {
   
   echo "Starting test execution..."
   cd test
-  node test.js || true
+  node test.js
   cd /app
   
   echo "All tests completed."
