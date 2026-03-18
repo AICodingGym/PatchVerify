@@ -13,8 +13,11 @@ git checkout 1e32ae3ec085dc3ab8611b88b56baf6354fa0762
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 08ac40d050a64e1d2646ece4959af0c42bf6b7b5 -- openlibrary/catalog/add_book/tests/test_add_book.py openlibrary/catalog/marc/tests/test_data/bin_expect/ithaca_college_75002321.json openlibrary/catalog/marc/tests/test_data/bin_expect/lesnoirsetlesrou0000garl_meta.json openlibrary/catalog/marc/tests/test_data/bin_expect/memoirsofjosephf00fouc_meta.json openlibrary/catalog/marc/tests/test_data/bin_expect/warofrebellionco1473unit_meta.json openlibrary/catalog/marc/tests/test_data/xml_expect/00schlgoog.json openlibrary/catalog/marc/tests/test_data/xml_expect/warofrebellionco1473unit.json
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 08ac40d050a64e1d2646ece4959af0c42bf6b7b5 -- openlibrary/catalog/add_book/tests/test_add_book.py openlibrary/catalog/marc/tests/test_data/bin_expect/ithaca_college_75002321.json openlibrary/catalog/marc/tests/test_data/bin_expect/lesnoirsetlesrou0000garl_meta.json openlibrary/catalog/marc/tests/test_data/bin_expect/memoirsofjosephf00fouc_meta.json openlibrary/catalog/marc/tests/test_data/bin_expect/warofrebellionco1473unit_meta.json openlibrary/catalog/marc/tests/test_data/xml_expect/00schlgoog.json openlibrary/catalog/marc/tests/test_data/xml_expect/warofrebellionco1473unit.json
+fi
 
 # Run tests
 bash /workspace/run_script.sh openlibrary/catalog/marc/tests/test_parse.py,openlibrary/catalog/add_book/tests/test_add_book.py > /workspace/stdout.log 2> /workspace/stderr.log
