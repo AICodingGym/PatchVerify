@@ -13,8 +13,11 @@ git checkout d3bf2a6f26e8e549c0732c26fdcc82725d3c6633
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 0ec945d0510cdebf92cdd8999f94610772689f14 -- scanner/redhatbase_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 0ec945d0510cdebf92cdd8999f94610772689f14 -- scanner/redhatbase_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh Test_redhatBase_parseInstalledPackagesLine/not_standard_rpm_style_source_package,Test_redhatBase_parseInstalledPackagesLine/release_is_empty,Test_redhatBase_parseInstalledPackagesLine/not_standard_rpm_style_source_package_2,Test_redhatBase_parseInstalledPackagesLine,Test_redhatBase_parseInstalledPackagesLine/not_standard_rpm_style_source_package_3,Test_redhatBase_parseInstalledPackagesLine/release_is_empty_2 > /workspace/stdout.log 2> /workspace/stderr.log
