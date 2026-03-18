@@ -6,22 +6,22 @@ run_all_tests() {
   export NODE_OPTIONS="--max-old-space-size=4096"
   
   echo "=== Running proton-mail tests ==="
-  yarn workspace proton-mail test --runInBand --ci --logHeapUsage --verbose || true
+  yarn workspace proton-mail test --runInBand --ci --logHeapUsage --verbose
   
   echo "=== Running @proton/components tests ==="
-  yarn workspace @proton/components test --runInBand --ci --logHeapUsage --verbose || true
+  yarn workspace @proton/components test --runInBand --ci --logHeapUsage --verbose
   
   echo "=== Running proton-calendar tests ==="
-  yarn workspace proton-calendar test --runInBand --ci --logHeapUsage --verbose || true
+  yarn workspace proton-calendar test --runInBand --ci --logHeapUsage --verbose
   
   echo "=== Running proton-drive tests ==="
-  yarn workspace proton-drive test --runInBand --ci --logHeapUsage --verbose || true
+  yarn workspace proton-drive test --runInBand --ci --logHeapUsage --verbose
   
   echo "=== Running proton-account tests ==="
-  yarn workspace proton-account test --runInBand --ci --logHeapUsage --verbose || true
+  yarn workspace proton-account test --runInBand --ci --logHeapUsage --verbose
   
   echo "=== Running proton-verify tests ==="
-  yarn workspace proton-verify test --runInBand --ci --logHeapUsage --verbose || true
+  yarn workspace proton-verify test --runInBand --ci --logHeapUsage --verbose
 }
 
 run_selected_tests() {
