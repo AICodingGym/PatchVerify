@@ -11,7 +11,7 @@ run_all_tests() {
   
   echo "Starting test execution..."
   cd test
-  node test api || true
+  node test api
   cd /app
   
   echo "All tests completed."
