@@ -14,8 +14,11 @@ git checkout a1a9b965990811708c7997e783778e146b6b2fbd
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 4817fe14e1356789c90165c2a53f6a043c2c5f83 -- applications/mail/src/app/helpers/message/messageDraft.test.ts applications/mail/src/app/helpers/message/messageSignature.test.ts applications/mail/src/app/helpers/textToHtml.test.ts
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 4817fe14e1356789c90165c2a53f6a043c2c5f83 -- applications/mail/src/app/helpers/message/messageDraft.test.ts applications/mail/src/app/helpers/message/messageSignature.test.ts applications/mail/src/app/helpers/textToHtml.test.ts
+fi
 
 # Run tests
 bash /workspace/run_script.sh applications/mail/src/app/helpers/textToHtml.test.ts,src/app/helpers/message/messageSignature.test.ts,applications/mail/src/app/helpers/message/messageSignature.test.ts,applications/mail/src/app/helpers/message/messageDraft.test.ts,src/app/helpers/message/messageDraft.test.ts > /workspace/stdout.log 2> /workspace/stderr.log
