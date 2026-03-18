@@ -13,8 +13,11 @@ git checkout 8ebdcab7d92f90422776c4390363338dcfd98ba5
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout ee13e23b156fbad9369d6a656c827b6444343d4f -- test/components/views/right_panel/RoomHeaderButtons-test.tsx
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout ee13e23b156fbad9369d6a656c827b6444343d4f -- test/components/views/right_panel/RoomHeaderButtons-test.tsx
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/components/views/dialogs/InteractiveAuthDialog-test.ts,test/components/views/right_panel/RoomHeaderButtons-test.tsx,test/components/views/rooms/RoomHeader-test.ts,test/components/structures/ThreadView-test.ts,test/components/views/settings/shared/SettingsSubsection-test.ts,test/components/views/right_panel/RoomHeaderButtons-test.ts,test/hooks/useProfileInfo-test.ts,test/ScalarAuthClient-test.ts,test/events/location/getShareableLocationEvent-test.ts,test/voice-broadcast/components/atoms/VoiceBroadcastHeader-test.ts > /workspace/stdout.log 2> /workspace/stderr.log
