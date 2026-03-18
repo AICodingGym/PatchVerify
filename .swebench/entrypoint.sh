@@ -14,8 +14,11 @@ git checkout b63f2ef3157bdfb8b3ff46d9097f9e65b00a4c3a
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 8142704f447df6e108d53cab25451c8a94976b92 -- applications/mail/src/app/components/message/extras/ExtraEvents.test.tsx packages/components/containers/calendar/settings/PersonalCalendarsSection.test.tsx packages/shared/test/calendar/subscribe/helpers.spec.ts
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 8142704f447df6e108d53cab25451c8a94976b92 -- applications/mail/src/app/components/message/extras/ExtraEvents.test.tsx packages/components/containers/calendar/settings/PersonalCalendarsSection.test.tsx packages/shared/test/calendar/subscribe/helpers.spec.ts
+fi
 
 # Run tests
 bash /workspace/run_script.sh src/app/components/message/extras/ExtraEvents.test.ts,packages/shared/test/calendar/subscribe/helpers.spec.ts,containers/calendar/settings/PersonalCalendarsSection.test.ts,packages/components/containers/calendar/settings/PersonalCalendarsSection.test.tsx,applications/mail/src/app/components/message/extras/ExtraEvents.test.tsx > /workspace/stdout.log 2> /workspace/stderr.log
