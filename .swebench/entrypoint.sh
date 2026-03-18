@@ -15,8 +15,11 @@ git checkout 3677dd20bcdd17aa0fa0f202f4ea50c46936bdc5
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout f8cc11d9c1575fdba5ac66aee0befca970da8d64 -- scripts/tests/test_import_open_textbook_library.py
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout f8cc11d9c1575fdba5ac66aee0befca970da8d64 -- scripts/tests/test_import_open_textbook_library.py
+fi
 
 # Run tests
 bash /workspace/run_script.sh scripts/tests/test_import_open_textbook_library.py > /workspace/stdout.log 2> /workspace/stderr.log
