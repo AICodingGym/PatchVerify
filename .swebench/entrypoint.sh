@@ -14,8 +14,11 @@ git checkout aba05b2f451b2f8765207846b11dc67190cb9930
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 715dbd4e6999499cd2a576a532d8214f75189116 -- packages/components/containers/contacts/email/ContactEmailSettingsModal.test.tsx packages/shared/test/keys/publicKeys.spec.ts packages/shared/test/mail/encryptionPreferences.spec.ts
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 715dbd4e6999499cd2a576a532d8214f75189116 -- packages/components/containers/contacts/email/ContactEmailSettingsModal.test.tsx packages/shared/test/keys/publicKeys.spec.ts packages/shared/test/mail/encryptionPreferences.spec.ts
+fi
 
 # Run tests
 bash /workspace/run_script.sh packages/shared/test/keys/publicKeys.spec.ts,packages/shared/test/mail/encryptionPreferences.spec.ts,packages/components/containers/contacts/email/ContactEmailSettingsModal.test.tsx,containers/contacts/email/ContactEmailSettingsModal.test.ts > /workspace/stdout.log 2> /workspace/stderr.log
