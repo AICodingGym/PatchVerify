@@ -6,7 +6,7 @@ set -e
 # Replace this with your command to run all tests
 run_all_tests() {
   echo "Running all tests..."
-  go test -v ./... || true
+  go test -v ./...
 }
 
 # Replace this with your command to run specific test names
@@ -28,7 +28,7 @@ run_selected_tests() {
   regex_group="^($regex_group)$"
 
   # Use go test with the -run flag to execute only those tests
-  go test -v -run "$regex_group" ./... || true
+  go test -v -run "$regex_group" ./...
 }
 # --- END CONFIGURATION SECTION ---
 
