@@ -13,8 +13,11 @@ git checkout 8a8ab8cb18161244ee6f078b43a89b3588d99a4d
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 4b680b996061044e93ef5977a081661665d3360a -- models/scanresults_test.go scan/freebsd_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 4b680b996061044e93ef5977a081661665d3360a -- models/scanresults_test.go scan/freebsd_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestParseIp,TestSplitAptCachePolicy,TestIsRunningKernelRedHatLikeLinux,TestDecorateCmd,TestParseDockerPs,TestParsePkgVersion,TestParseChangelog/realvnc-vnc-server,TestGetCveIDsFromChangelog,TestParseApkInfo,TestParseLxdPs,TestIsDisplayUpdatableNum,TestScanUpdatablePackages,TestIsRunningKernelSUSE,Test_base_parseLsProcExe,TestGetChangelogCache,Test_base_parseLsOf,TestParseAptCachePolicy,TestParseBlock,TestParseInstalledPackagesLinesRedhat,Test_base_parseLsOf/lsof,TestParseSystemctlStatus,TestParseChangelog,TestParseYumCheckUpdateLinesAmazon,TestParseCheckRestart,TestParseApkVersion,TestParseIfconfig,TestParseNeedsRestarting,TestViaHTTP,TestParsePkgInfo,Test_debian_parseGetPkgName/success,TestParseOSRelease,Test_base_parseGrepProcMap,TestParseScanedPackagesLineRedhat,TestGetUpdatablePackNames,Test_base_parseGrepProcMap/systemd,TestParseChangelog/vlc,Test_base_parseLsProcExe/systemd,TestIsAwsInstanceID,TestParseYumCheckUpdateLines,TestScanUpdatablePackage,Test_debian_parseGetPkgName,TestSplitIntoBlocks,TestParseYumCheckUpdateLine > /workspace/stdout.log 2> /workspace/stderr.log
