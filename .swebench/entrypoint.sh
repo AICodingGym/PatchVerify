@@ -13,8 +13,11 @@ git checkout 472df0e1b6ab9b50f8605af957ad054c7a732938
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 50580f6e98eeb36f53f27222f7f4fdfea0b21e8d -- detector/wordpress_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 50580f6e98eeb36f53f27222f7f4fdfea0b21e8d -- detector/wordpress_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh Test_convertToVinfos,Test_convertToVinfos/WordPress_vulnerabilities_Enterprise,Test_convertToVinfos/WordPress_vulnerabilities_Researcher > /workspace/stdout.log 2> /workspace/stderr.log
