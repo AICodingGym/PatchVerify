@@ -13,8 +13,11 @@ git checkout 254de2a43487c61adf3cdc9e35d8a9aa58a186a3
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 811093f0225caa4dd33890933150a81c6a6d5226 -- test/integration/targets/blocks/72725.yml test/integration/targets/blocks/72781.yml test/integration/targets/blocks/runme.sh test/integration/targets/handlers/46447.yml test/integration/targets/handlers/52561.yml test/integration/targets/handlers/54991.yml test/integration/targets/handlers/include_handlers_fail_force-handlers.yml test/integration/targets/handlers/include_handlers_fail_force.yml test/integration/targets/handlers/order.yml test/integration/targets/handlers/runme.sh test/integration/targets/handlers/test_flush_handlers_as_handler.yml test/integration/targets/handlers/test_flush_handlers_rescue_always.yml test/integration/targets/handlers/test_flush_in_rescue_always.yml test/integration/targets/handlers/test_handlers_infinite_loop.yml test/integration/targets/handlers/test_handlers_meta.yml test/integration/targets/handlers/test_skip_flush.yml test/units/plugins/strategy/test_linear.py test/units/plugins/strategy/test_strategy.py
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 811093f0225caa4dd33890933150a81c6a6d5226 -- test/integration/targets/blocks/72725.yml test/integration/targets/blocks/72781.yml test/integration/targets/blocks/runme.sh test/integration/targets/handlers/46447.yml test/integration/targets/handlers/52561.yml test/integration/targets/handlers/54991.yml test/integration/targets/handlers/include_handlers_fail_force-handlers.yml test/integration/targets/handlers/include_handlers_fail_force.yml test/integration/targets/handlers/order.yml test/integration/targets/handlers/runme.sh test/integration/targets/handlers/test_flush_handlers_as_handler.yml test/integration/targets/handlers/test_flush_handlers_rescue_always.yml test/integration/targets/handlers/test_flush_in_rescue_always.yml test/integration/targets/handlers/test_handlers_infinite_loop.yml test/integration/targets/handlers/test_handlers_meta.yml test/integration/targets/handlers/test_skip_flush.yml test/units/plugins/strategy/test_linear.py test/units/plugins/strategy/test_strategy.py
+fi
 
 # Run tests
 bash /workspace/run_script.sh test/units/plugins/strategy/test_linear.py,test/units/plugins/strategy/test_strategy.py > /workspace/stdout.log 2> /workspace/stderr.log
