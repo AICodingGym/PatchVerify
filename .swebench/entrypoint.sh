@@ -14,8 +14,11 @@ git checkout 52ada0340f0ae0869ef1e3b92e1cc4c799b637cf
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout f161c10cf7d31abf82e8d64d7a99c9fac5acfa18 -- packages/components/containers/contacts/import/ContactImportModal.test.tsx packages/shared/test/contacts/property.spec.ts
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout f161c10cf7d31abf82e8d64d7a99c9fac5acfa18 -- packages/components/containers/contacts/import/ContactImportModal.test.tsx packages/shared/test/contacts/property.spec.ts
+fi
 
 # Run tests
 bash /workspace/run_script.sh packages/components/containers/contacts/import/ContactImportModal.test.tsx,containers/contacts/import/ContactImportModal.test.ts,packages/shared/test/contacts/property.spec.ts > /workspace/stdout.log 2> /workspace/stderr.log
