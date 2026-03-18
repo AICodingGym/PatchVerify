@@ -71,7 +71,7 @@ def parse_test_output(stdout_content: str, stderr_content: str) -> List[TestResu
     }
 
     results: List[TestResult] = []
-    pattern = re.compile(r'^--- (PASS):\s*(\S+)\s*\(.*\)$')
+    pattern = re.compile(r'^--- (PASS|FAIL|SKIP):\s*(\S+)\s*\(.*\)$')
 
     for line in stdout_content.splitlines():
         m = pattern.match(line)
@@ -82,6 +82,11 @@ def parse_test_output(stdout_content: str, stderr_content: str) -> List[TestResu
         if status:
             results.append(TestResult(name=name, status=status))
 
+    # Detect [build failed] (compilation errors before any tests run)
+    if not results:
+        combined = stdout_content + '\n' + stderr_content
+        if re.search(r'\[build failed\]', combined, re.IGNORECASE):
+            results.append(TestResult(name='build_failed', status=TestStatus.FAILED))
     return results
 
 ### Implement the parsing logic above ###
