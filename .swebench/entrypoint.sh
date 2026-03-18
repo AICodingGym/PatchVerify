@@ -13,8 +13,11 @@ git checkout 456ee2570b53ee8efd812aeb64546a19ed9256fc
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 3ef34d1fff012140ba86ab3cafec8f9934b492be -- internal/server/middleware/grpc/middleware_test.go internal/server/middleware/grpc/support_test.go internal/storage/cache/cache_test.go internal/storage/cache/support_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 3ef34d1fff012140ba86ab3cafec8f9934b492be -- internal/server/middleware/grpc/middleware_test.go internal/server/middleware/grpc/support_test.go internal/storage/cache/cache_test.go internal/storage/cache/support_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestSetJSON_HandleMarshalError,TestGetProtobuf_HandleUnmarshalError,TestGetJSON_HandleUnmarshalError,TestGetJSON_HandleGetError,TestGetProtobuf_HandleGetError > /workspace/stdout.log 2> /workspace/stderr.log
