@@ -13,8 +13,11 @@ git checkout 69d32d45116aefd871327b9254977015a57995b8
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout 6eff6a9329a65cc412e79b8f82444dfa3d0f0b5a -- config/os_test.go oval/util_test.go util/util_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout 6eff6a9329a65cc412e79b8f82444dfa3d0f0b5a -- config/os_test.go oval/util_test.go util/util_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestEOL_IsStandardSupportEnded/Debian_9_supported,TestEOL_IsStandardSupportEnded/freebsd_11_supported,TestEOL_IsStandardSupportEnded/freebsd_11_eol_on_2021-9-30,TestEOL_IsStandardSupportEnded/CentOS_7_supported,TestEOL_IsStandardSupportEnded/Debian_10_supported,Test_major,TestEOL_IsStandardSupportEnded/Oracle_Linux_9_not_found,TestEOL_IsStandardSupportEnded/Ubuntu_12.10_not_found,TestEOL_IsStandardSupportEnded/CentOS_9_not_found,TestEOL_IsStandardSupportEnded/CentOS_8_supported,TestDistro_MajorVersion,TestEOL_IsStandardSupportEnded/amazon_linux_2_supported,TestSyslogConfValidate,TestEOL_IsStandardSupportEnded/Ubuntu_18.04_ext_supported,TestEOL_IsStandardSupportEnded/Ubuntu_21.04_supported,TestEOL_IsStandardSupportEnded/Debian_11_supported,TestEOL_IsStandardSupportEnded/freebsd_10_eol,TestPrependHTTPProxyEnv,TestEOL_IsStandardSupportEnded/Oracle_Linux_7_supported,TestEOL_IsStandardSupportEnded/RHEL7_supported,TestEOL_IsStandardSupportEnded/Debian_8_supported,TestTruncate,TestEOL_IsStandardSupportEnded,TestEOL_IsStandardSupportEnded/amazon_linux_1_eol_on_2023-6-30,TestEOL_IsStandardSupportEnded/Ubuntu_14.10_eol,TestEOL_IsStandardSupportEnded/Ubuntu_18.04_supported,TestEOL_IsStandardSupportEnded/Alpine_3.11_supported,TestEOL_IsStandardSupportEnded/RHEL9_not_found,TestEOL_IsStandardSupportEnded/amazon_linux_1_supported,TestEOL_IsStandardSupportEnded/RHEL6_eol,TestEOL_IsStandardSupportEnded/Debian_3.13_not_found,TestEOL_IsStandardSupportEnded/CentOS_6_eol,TestEOL_IsStandardSupportEnded/alpine_3.10_supported,TestEOL_IsStandardSupportEnded/Alpine_3.12_supported,TestEOL_IsStandardSupportEnded/RHEL8_supported,TestEOL_IsStandardSupportEnded/Oracle_Linux_8_supported,TestUrlJoin,TestEOL_IsStandardSupportEnded/Debian_3.9_eol,TestEOL_IsStandardSupportEnded/freebsd_12_supported,TestEOL_IsStandardSupportEnded/Ubuntu_14.04_eol,TestToCpeURI,TestEOL_IsStandardSupportEnded/Ubuntu_16.04_supported,TestEOL_IsStandardSupportEnded/Oracle_Linux_6_eol > /workspace/stdout.log 2> /workspace/stderr.log
