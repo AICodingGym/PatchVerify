@@ -13,8 +13,11 @@ git checkout 91449219e798e1440f1553738a224d50b5ac9ba1
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup (mirrors before_repo_set_cmd)
-git checkout a95b3ae0667f9e4b2404bf61f51113e6d83f01cd -- tool/tsh/tsh_test.go
+# Apply test setup only when a real code patch was provided (not just .swebench/.github)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+if [ "$HAS_CODE_PATCH" -gt 0 ]; then
+  git checkout a95b3ae0667f9e4b2404bf61f51113e6d83f01cd -- tool/tsh/tsh_test.go
+fi
 
 # Run tests
 bash /workspace/run_script.sh TestKubeConfigUpdate/no_selected_cluster,TestEnvFlags/cluster_env/TELEPORT_SITE_and_TELEPORT_CLUSTER_and_CLI_flag_is_set,_prefer_CLI,TestEnvFlags/cluster_env/TELEPORT_CLUSTER_set,TestFormatConnectCommand/default_user_is_specified,TestOptions/Invalid_key,TestRelogin,TestEnvFlags/kube_cluster_env/CLI_flag_is_set,TestKubeConfigUpdate/no_tsh_path,TestKubeConfigUpdate/selected_cluster,TestFormatConnectCommand/default_database_is_specified,TestEnvFlags/cluster_env,TestEnvFlags/kube_cluster_env/TELEPORT_KUBE_CLUSTER_and_CLI_flag_is_set,_prefer_CLI,TestEnvFlags,TestMakeClient,TestResolveDefaultAddrSingleCandidate,TestEnvFlags/kube_cluster_env/TELEPORT_KUBE_CLUSTER_set,TestFailedLogin,TestEnvFlags/teleport_home_env,TestEnvFlags/teleport_home_env/TELEPORT_HOME_and_CLI_flag_is_set,_prefer_env,TestEnvFlags/teleport_home_env/CLI_flag_is_set,TestResolveNonOKResponseIsAnError,TestFormatConnectCommand/default_user/database_are_specified,TestEnvFlags/cluster_env/CLI_flag_is_set,TestResolveDefaultAddrTimeout,TestEnvFlags/kube_cluster_env,TestEnvFlags/teleport_home_env/nothing_set,TestEnvFlags/teleport_home_env/TELEPORT_HOME_set,TestEnvFlags/kube_cluster_env/nothing_set,TestKubeConfigUpdate/no_kube_clusters,TestFormatConnectCommand,TestResolveDefaultAddrNoCandidates,TestEnvFlags/cluster_env/TELEPORT_SITE_and_TELEPORT_CLUSTER_set,_prefer_TELEPORT_CLUSTER,TestOIDCLogin,TestOptions/Incomplete_option,TestOptions/Forward_Agent_Yes,TestOptions/Forward_Agent_InvalidValue,TestFormatConnectCommand/no_default_user/database_are_specified,TestResolveDefaultAddr,TestEnvFlags/cluster_env/TELEPORT_SITE_set,TestOptions/Equals_Sign_Delimited,TestOptions/Forward_Agent_Local,TestIdentityRead,TestKubeConfigUpdate,TestOptions/Forward_Agent_No,TestOptions/AddKeysToAgent_Invalid_Value,TestFetchDatabaseCreds,TestOptions/Space_Delimited,TestResolveUndeliveredBodyDoesNotBlockForever,TestKubeConfigUpdate/invalid_selected_cluster,TestOptions,TestEnvFlags/cluster_env/nothing_set,TestResolveDefaultAddrTimeoutBeforeAllRacersLaunched > /workspace/stdout.log 2> /workspace/stderr.log
