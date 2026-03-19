@@ -14,7 +14,7 @@ git checkout 0079a9b93873621fa0bed5439a0f753f48e081b5
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout e12a14a87d392ac70ee4cc8079e3c3e0103dbcb2 -- scanner/metadata/ffmpeg/ffmpeg_test.go scanner/metadata/metadata_test.go scanner/metadata/taglib/taglib_test.go
 fi
