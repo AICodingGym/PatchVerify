@@ -14,7 +14,7 @@ git checkout ad9cbe93994888e8f8ba88ce3614dc041a698930
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout fe14847bb9bb07cab1b9c6c54335ff22ca5e516a -- test/test-utils/test-utils.ts test/voice-broadcast/components/VoiceBroadcastBody-test.tsx test/voice-broadcast/models/VoiceBroadcastRecording-test.ts test/voice-broadcast/stores/VoiceBroadcastRecordingsStore-test.ts test/voice-broadcast/utils/startNewVoiceBroadcastRecording-test.ts
 fi
