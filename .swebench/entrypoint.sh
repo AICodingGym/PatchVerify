@@ -14,7 +14,7 @@ git checkout bf14b5f61f7a65cb64cf762c71885a413a9fcb66
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout be7b9114cc9545e68fb0ee7bc63d7ec53d1a00ad -- contrib/trivy/parser/v2/parser_test.go models/library_test.go
 fi
