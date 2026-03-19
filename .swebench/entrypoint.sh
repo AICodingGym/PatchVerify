@@ -14,7 +14,7 @@ git checkout 973513cc758030917cb339ba35d6436bc2c7d5dd
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout cf3c899dd1f221aa1a1f4c5a80dffc05b9c21c85 -- test/voice-broadcast/components/atoms/LiveBadge-test.tsx test/voice-broadcast/components/atoms/VoiceBroadcastHeader-test.tsx test/voice-broadcast/components/atoms/__snapshots__/LiveBadge-test.tsx.snap test/voice-broadcast/components/atoms/__snapshots__/VoiceBroadcastHeader-test.tsx.snap test/voice-broadcast/components/molecules/VoiceBroadcastPlaybackBody-test.tsx test/voice-broadcast/components/molecules/VoiceBroadcastRecordingBody-test.tsx test/voice-broadcast/components/molecules/__snapshots__/VoiceBroadcastPlaybackBody-test.tsx.snap test/voice-broadcast/components/molecules/__snapshots__/VoiceBroadcastRecordingBody-test.tsx.snap test/voice-broadcast/components/molecules/__snapshots__/VoiceBroadcastRecordingPip-test.tsx.snap test/voice-broadcast/models/VoiceBroadcastPlayback-test.ts
 fi
