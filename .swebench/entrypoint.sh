@@ -14,7 +14,7 @@ git checkout 19f9f9856451a8e4cce6d313d19ca8aed4b5d6b4
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout 44b98896a79ede48f5ad7ff22619a39d5f6ff03c -- test/components/views/settings/SetIntegrationManager-test.tsx test/components/views/settings/__snapshots__/SetIntegrationManager-test.tsx.snap test/components/views/settings/tabs/user/GeneralUserSettingsTab-test.tsx test/components/views/settings/tabs/user/__snapshots__/GeneralUserSettingsTab-test.tsx.snap test/components/views/settings/tabs/user/__snapshots__/SecurityUserSettingsTab-test.tsx.snap
 fi
