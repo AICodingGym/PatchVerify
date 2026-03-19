@@ -14,7 +14,7 @@ git checkout ea164fdde79a3e624c28f90c74f57f06360d2333
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout d72025be751c894673ba85caa063d835a0ad3a8c -- test/integration/targets/nxos_interfaces/tasks/main.yaml test/integration/targets/nxos_interfaces/tests/cli/deleted.yaml test/integration/targets/nxos_interfaces/tests/cli/merged.yaml test/integration/targets/nxos_interfaces/tests/cli/overridden.yaml test/integration/targets/nxos_interfaces/tests/cli/replaced.yaml test/units/modules/network/nxos/test_nxos_interfaces.py
 fi
