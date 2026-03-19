@@ -15,7 +15,7 @@ git checkout 473d37b9dc0ab4fb4935b1ee59e3ab2d6ea6b9c2
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout 6dcf0d0b0f7965ad94be3f84971afeb437f25b02 -- packages/components/components/drawer/views/SecurityCenter/PassAliases/PassAliases.test.tsx
 fi
