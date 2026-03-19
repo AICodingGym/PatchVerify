@@ -15,7 +15,7 @@ git checkout 813c25eed1e4832a8ae363455a2f40bb3de33c7f
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout a02e22e902a69aeb465f16bf03f7f5a91b2cb828 -- test/integration/targets/ansible-galaxy-collection/tasks/install_offline.yml test/integration/targets/ansible-galaxy-collection/templates/ansible.cfg.j2 test/integration/targets/ansible-galaxy-collection/vars/main.yml test/units/galaxy/test_collection_install.py
 fi
