@@ -15,7 +15,7 @@ git checkout 4aeaf4a64578fe82cdee4a01636121ba0c03ac97
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
 # Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md" | wc -l)
+HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
 if [ "$HAS_CODE_PATCH" -gt 0 ]; then
   git checkout c6f65d205c401350a226bb005f42fac1754b0b5b -- applications/mail/src/app/components/eo/message/tests/ViewEOMessage.attachments.test.tsx applications/mail/src/app/components/eo/reply/tests/EOReply.attachments.test.tsx applications/mail/src/app/components/message/recipients/tests/MailRecipientItemSingle.blockSender.test.tsx applications/mail/src/app/components/message/recipients/tests/MailRecipientItemSingle.test.tsx applications/mail/src/app/components/message/tests/Message.attachments.test.tsx applications/mail/src/app/components/message/tests/Message.banners.test.tsx applications/mail/src/app/components/message/tests/Message.modes.test.tsx
 fi
