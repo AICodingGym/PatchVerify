@@ -14,11 +14,8 @@ git checkout 0a917c6b190dd872338287d9abbb73a7a03eee2c
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout b387b24147e4b5ec3b482b8719ea72bee001462a -- packages/components/components/v2/phone/PhoneInput.test.tsx
-fi
+# Apply test setup (checkout gold test files)
+git checkout b387b24147e4b5ec3b482b8719ea72bee001462a -- packages/components/components/v2/phone/PhoneInput.test.tsx
 
 # Run tests
 bash /workspace/run_script.sh packages/components/components/v2/phone/PhoneInput.test.tsx,components/v2/phone/PhoneInput.test.ts > /workspace/stdout.log 2> /workspace/stderr.log
