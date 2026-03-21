@@ -14,11 +14,8 @@ git checkout 662d34b9a7a1b3ab1d4847eeaef201a005826aef
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout fb144c44144f8bd3542e71f5db62b6d322c7bd85 -- test/units/cli/test_doc.py
-fi
+# Apply test setup (checkout gold test files)
+git checkout fb144c44144f8bd3542e71f5db62b6d322c7bd85 -- test/units/cli/test_doc.py
 
 # Run tests
 bash /workspace/run_script.sh test/units/cli/test_doc.py > /workspace/stdout.log 2> /workspace/stderr.log
