@@ -14,11 +14,8 @@ git checkout 078178de4df1ffb606f1fc5a46bebe6c31d06b4a
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout e9677f6c46d5ea7d277a4532a4bf90074f125f31 -- packages/components/components/modalTwo/ModalTwo.test.tsx
-fi
+# Apply test setup (checkout gold test files)
+git checkout e9677f6c46d5ea7d277a4532a4bf90074f125f31 -- packages/components/components/modalTwo/ModalTwo.test.tsx
 
 # Run tests
 bash /workspace/run_script.sh packages/components/components/modalTwo/ModalTwo.test.tsx,components/modalTwo/ModalTwo.test.ts > /workspace/stdout.log 2> /workspace/stderr.log
