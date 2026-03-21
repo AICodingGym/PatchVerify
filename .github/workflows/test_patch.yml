@@ -25,7 +25,7 @@ jobs:
         run: |
           git fetch origin $BASE_COMMIT --depth=1
           mkdir -p /tmp/swebench-workspace
-          git diff $BASE_COMMIT HEAD > /tmp/swebench-workspace/patch.diff || true
+          git diff $BASE_COMMIT HEAD -- ':!.swebench' ':!.github' ':!.devcontainer' ':!.vscode' ':!submit.sh' ':!.gitignore' ':!problem_statement.md' ':!hints_text.md' ':!CLAUDE.md' ':!AGENTS.md' ':!.claudeignore' ':!.copilotignore' ':!.cursorignore' ':!.cursorrules' > /tmp/swebench-workspace/patch.diff || true
           echo "Patch size: $(wc -c < /tmp/swebench-workspace/patch.diff) bytes"
           cp .swebench/run_script.sh /tmp/swebench-workspace/run_script.sh
           cp .swebench/parser.py /tmp/swebench-workspace/parser.py
