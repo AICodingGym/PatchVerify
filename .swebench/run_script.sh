@@ -1,6 +1,6 @@
 #!/bin/bash
 ### COMMON SETUP; DO NOT MODIFY ###
-set -e
+set -eo pipefail
 
 SKIP_TEST_CASES="not test_user_agent"
 
