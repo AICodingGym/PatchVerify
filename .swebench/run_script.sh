@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 prepare_test_environment() {
   redis-server --daemonize yes --protected-mode no --appendonly yes
