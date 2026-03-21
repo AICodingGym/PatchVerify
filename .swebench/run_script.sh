@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 export NODE_ENV=test
 export CHROME_BIN=/usr/bin/chromium
