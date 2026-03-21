@@ -13,11 +13,8 @@ git checkout bfe0db77b4e16e3099a1e58b8db8f18120a11117
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout ad2edbb8448e2c41a097f1c0b52696c0f6c5924d -- config/os_test.go gost/ubuntu_test.go
-fi
+# Apply test setup (checkout gold test files)
+git checkout ad2edbb8448e2c41a097f1c0b52696c0f6c5924d -- config/os_test.go gost/ubuntu_test.go
 
 # Run tests
 bash /workspace/run_script.sh TestUbuntuConvertToModel/gost_Ubuntu.ConvertToModel,TestDebian_Supported/8_is_supported,TestUbuntu_Supported/16.04_is_supported,TestDebian_Supported/11_is_supported,TestUbuntu_Supported/20.04_is_supported,TestUbuntu_Supported,Test_detect/linux-meta,Test_detect,TestUbuntu_Supported/14.04_is_supported,TestDebian_Supported/9_is_supported,Test_detect/linux-signed,Test_detect/unfixed,TestDebian_Supported/empty_string_is_not_supported_yet,TestParseCwe,TestUbuntuConvertToModel,TestDebian_Supported,Test_detect/fixed,TestSetPackageStates,TestUbuntu_Supported/empty_string_is_not_supported_yet,TestDebian_Supported/10_is_supported,TestUbuntu_Supported/20.10_is_supported,TestUbuntu_Supported/21.04_is_supported,TestUbuntu_Supported/18.04_is_supported,TestDebian_Supported/12_is_not_supported_yet > /workspace/stdout.log 2> /workspace/stderr.log
