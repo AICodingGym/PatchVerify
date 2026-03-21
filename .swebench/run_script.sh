@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 run_all_tests() {
   echo "Running all tests..."
