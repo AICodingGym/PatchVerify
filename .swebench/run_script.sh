@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 grep_args=(
   --grep="(forum/debug/(spec/{type}|test) should be defined in schema docs| should export users (posts|profile))"
