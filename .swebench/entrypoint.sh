@@ -13,11 +13,8 @@ git checkout 73248bf27d4c6094799512b95993382ea2139e72
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout f02a62db509dc7463fab642c9c3458b9bc3476cc -- test/integration/targets/netapp_eseries_drive_firmware/aliases test/integration/targets/netapp_eseries_drive_firmware/tasks/main.yml test/integration/targets/netapp_eseries_drive_firmware/tasks/run.yml test/units/modules/storage/netapp/test_netapp_e_drive_firmware.py
-fi
+# Apply test setup (checkout gold test files)
+git checkout f02a62db509dc7463fab642c9c3458b9bc3476cc -- test/integration/targets/netapp_eseries_drive_firmware/aliases test/integration/targets/netapp_eseries_drive_firmware/tasks/main.yml test/integration/targets/netapp_eseries_drive_firmware/tasks/run.yml test/units/modules/storage/netapp/test_netapp_e_drive_firmware.py
 
 # Run tests
 bash /workspace/run_script.sh test/units/modules/storage/netapp/test_netapp_e_drive_firmware.py > /workspace/stdout.log 2> /workspace/stderr.log
