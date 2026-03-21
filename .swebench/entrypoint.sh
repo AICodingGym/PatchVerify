@@ -14,11 +14,8 @@ git checkout 7ff95b70115415f47b89c81a40e90b60bcf3dbd8
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout 8afd9ce04c8dde9e150e1c2b50d32e7ee2efa3e7 -- applications/drive/src/app/components/FileBrowser/hooks/useSelectionControls.test.ts
-fi
+# Apply test setup (checkout gold test files)
+git checkout 8afd9ce04c8dde9e150e1c2b50d32e7ee2efa3e7 -- applications/drive/src/app/components/FileBrowser/hooks/useSelectionControls.test.ts
 
 # Run tests
 bash /workspace/run_script.sh src/app/components/FileBrowser/hooks/useSelectionControls.test.ts,applications/drive/src/app/components/FileBrowser/hooks/useSelectionControls.test.ts > /workspace/stdout.log 2> /workspace/stderr.log
