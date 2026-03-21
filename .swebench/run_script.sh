@@ -1,6 +1,6 @@
 #!/bin/bash
 ### COMMON SETUP; DO NOT MODIFY ###
-set -eo pipefail
+set -eo pipefailo pipefail
 
 # --- CONFIGURE THIS SECTION ---
 # Replace this with your command to run all tests
