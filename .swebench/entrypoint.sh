@@ -14,11 +14,8 @@ git checkout 8ae1b7f17822e5121f7394d03192e283904579ad
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout caf10ba9ab2677761c88522d1ba8ad025779c492 -- applications/mail/src/app/helpers/calendar/invite.test.ts packages/shared/test/calendar/alarms.spec.ts packages/shared/test/calendar/decrypt.spec.ts packages/shared/test/calendar/getFrequencyString.spec.js packages/shared/test/calendar/integration/invite.spec.js packages/shared/test/calendar/recurring.spec.js packages/shared/test/calendar/rrule/rrule.spec.js packages/shared/test/calendar/rrule/rruleEqual.spec.js packages/shared/test/calendar/rrule/rruleSubset.spec.js packages/shared/test/calendar/rrule/rruleUntil.spec.js packages/shared/test/calendar/rrule/rruleWkst.spec.js
-fi
+# Apply test setup (checkout gold test files)
+git checkout caf10ba9ab2677761c88522d1ba8ad025779c492 -- applications/mail/src/app/helpers/calendar/invite.test.ts packages/shared/test/calendar/alarms.spec.ts packages/shared/test/calendar/decrypt.spec.ts packages/shared/test/calendar/getFrequencyString.spec.js packages/shared/test/calendar/integration/invite.spec.js packages/shared/test/calendar/recurring.spec.js packages/shared/test/calendar/rrule/rrule.spec.js packages/shared/test/calendar/rrule/rruleEqual.spec.js packages/shared/test/calendar/rrule/rruleSubset.spec.js packages/shared/test/calendar/rrule/rruleUntil.spec.js packages/shared/test/calendar/rrule/rruleWkst.spec.js
 
 # Run tests
 bash /workspace/run_script.sh packages/shared/test/calendar/recurring.spec.js,packages/shared/test/calendar/alarms.spec.ts,src/app/helpers/calendar/invite.test.ts,packages/shared/test/calendar/rrule/rruleEqual.spec.js,packages/shared/test/calendar/decrypt.spec.ts,packages/shared/test/calendar/rrule/rruleWkst.spec.js,packages/shared/test/calendar/rrule/rruleUntil.spec.js,packages/shared/test/calendar/rrule/rrule.spec.js,packages/shared/test/calendar/rrule/rruleSubset.spec.js,packages/shared/test/calendar/integration/invite.spec.js,packages/shared/test/calendar/getFrequencyString.spec.js,applications/mail/src/app/helpers/calendar/invite.test.ts > /workspace/stdout.log 2> /workspace/stderr.log
