@@ -36,7 +36,7 @@ import json, sys
 try:
     with open('/workspace/output.json') as f:
         data = json.load(f)
-    failed = [t for t in data.get('tests', []) if t.get('status') == 'FAILED']
+    failed = [t for t in data.get('tests', []) if t.get('status') in ('FAILED', 'ERROR')]
     if failed:
         print(f'{len(failed)} test(s) FAILED')
         sys.exit(1)
