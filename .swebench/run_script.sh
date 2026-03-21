@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 export DISPLAY=:99
 export QT_QPA_PLATFORM=offscreen
