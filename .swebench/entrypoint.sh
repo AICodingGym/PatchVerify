@@ -13,11 +13,8 @@ git checkout 21b45bd4378834403ad9e69dc91605c21f43438b
 # Apply user patch
 git apply -v /workspace/patch.diff || echo 'WARNING: patch apply failed'
 
-# Apply test setup only when a real code patch was provided (not just .swebench/.github)
-HAS_CODE_PATCH=$(grep "^diff --git" /workspace/patch.diff 2>/dev/null | grep -v "\.swebench\|\.github\|submit\.sh\|\.gitignore\|problem_statement\.md\|hints_text\.md\|CLAUDE\.md\|AGENTS\.md\|\.claudeignore\|\.copilotignore\|\.cursorignore\|\.cursorrules\|\.devcontainer\|\.vscode" | wc -l)
-if [ "$HAS_CODE_PATCH" -gt 0 ]; then
-  git checkout 815695401137dac2975400fc610149a16db8214b -- packages/util/chunk.test.ts
-fi
+# Apply test setup (checkout gold test files)
+git checkout 815695401137dac2975400fc610149a16db8214b -- packages/util/chunk.test.ts
 
 # Run tests
 bash /workspace/run_script.sh packages/util/chunk.test.ts,packages/key-transparency/test/vrf.spec.js > /workspace/stdout.log 2> /workspace/stderr.log
