@@ -1,6 +1,6 @@
 #!/bin/bash
 ### COMMON SETUP; DO NOT MODIFY ###
-set -e
+set -eo pipefail
 
 # --- Test Commands ---
 
